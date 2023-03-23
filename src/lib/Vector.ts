@@ -30,4 +30,7 @@ export class Vector {
     const z = this.z + (v.z - this.z) * t;
     return new Vector(x, y, z);
   };
+  public useLerp = () => {
+    return this.x + (this.y - this.x) * this.z;
+  };
 }
