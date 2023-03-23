@@ -5,11 +5,20 @@ export class Road {
   public size: Vector = new Vector();
   public width: number = 500;
   public laneCount: number = 3;
+  public borders:Vector[][] = []
   constructor(origin: Vector, width: number = 250) {
     this.pos = origin;
     this.width = width;
     this.size.x = this.pos.x - width / 2;
     this.size.y = this.pos.x + width / 2;
+    this.borders.push([
+        new Vector(this.size.x, -100000),
+        new Vector(this.size.y, -100000)
+    ])
+    this.borders.push([
+        new Vector(this.size.x, 100000),
+        new Vector(this.size.y, 100000)
+    ])
   }
   public getLaneCenter = (index: number) => {
     let laneWidth = this.width / this.laneCount;
