@@ -1,4 +1,5 @@
 import { Controls } from "./Controls";
+import { Sensor } from "./Sensor";
 
 export class Car{
     public controls:Controls=new Controls();
@@ -9,8 +10,10 @@ export class Car{
     public angle:number=0;
     public friction:number=0.05;
     public maxSpeed:number=3;
+    public sensor:Sensor = new Sensor(this);
     constructor(public x:number,public y:number,public w:number,public h:number){}
     public draw(c:CanvasRenderingContext2D){
+        this.sensor.draw(c);
         c.save();
         c.translate(this.x, this.y);
         c.rotate(-this.angle);
