@@ -1,24 +1,25 @@
-import { Vector } from "./Vector";
+import { Line, Vector } from "./Vector";
 
 export class Road {
   public pos: Vector = new Vector();
   public size: Vector = new Vector();
   public width: number = 500;
   public laneCount: number = 3;
-  public borders:Vector[][] = []
+  public borders: Line[] = [];
   constructor(origin: Vector, width: number = 250) {
     this.pos = origin;
     this.width = width;
     this.size.x = this.pos.x - width / 2;
     this.size.y = this.pos.x + width / 2;
-    this.borders.push([
-        new Vector(this.size.x, -100000),
-        new Vector(this.size.y, -100000)
-    ])
-    this.borders.push([
+    this.borders.push(
+      new Line(
         new Vector(this.size.x, 100000),
-        new Vector(this.size.y, 100000)
-    ])
+        new Vector(this.size.x, -100000)
+      )
+    );
+    this.borders.push(
+      new Line(new Vector(this.size.y, -100000), new Vector(this.size.y, 100000))
+    );
   }
   public getLaneCenter = (index: number) => {
     let laneWidth = this.width / this.laneCount;
