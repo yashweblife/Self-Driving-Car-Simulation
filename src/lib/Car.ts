@@ -1,17 +1,23 @@
 import { Controls } from "./Controls";
 import { Sensor } from "./Sensor";
+import { Line } from "./Vector";
 
 export class Car{
     public controls:Controls=new Controls();
-    public ax:number=2;
-    public ay:number=2;
+    public x:number=0;
+    public y:number=0;
     public vy:number=0;
     public vx:number=0;
+    public ax:number=2;
+    public ay:number=2;
     public angle:number=0;
     public friction:number=0.05;
     public maxSpeed:number=3;
     public sensor:Sensor = new Sensor(this);
-    constructor(public x:number,public y:number,public w:number,public h:number){}
+    constructor(x:number, y:number,public w:number,public h:number){
+        this.x=x;
+        this.y=y;
+    }
     public draw(c:CanvasRenderingContext2D){
         this.sensor.draw(c);
         c.save();
@@ -23,7 +29,8 @@ export class Car{
         c.closePath();
         c.restore();
     }
-    public update = ()=>{
+    public update = (borders:Line[])=>{
+        this.sensor.update(borders);
         if(this.controls.forward){
             this.vy+=this.ay;
         }
