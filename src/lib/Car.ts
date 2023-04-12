@@ -1,9 +1,10 @@
 import { Controls } from "./Controls";
 import { Sensor } from "./Sensor";
 import { Line, Vector } from "./Vector";
+import { polyIntersect, polyPolyIntersect } from "./utils";
 
 export class Car {
-  public controls: Controls = new Controls();
+  public controls: Controls;
   public x: number = 0;
   public y: number = 0;
   public vy: number = 0;
@@ -13,16 +14,25 @@ export class Car {
   public angle: number = 0;
   public friction: number = 0.05;
   public maxSpeed: number = 3;
-  public sensor: Sensor = new Sensor(this);
+  public sensor: (Sensor|null);
   public polygons: Vector[] = [];
   public damaged: boolean = false;
-  constructor(x: number, y: number, public w: number, public h: number) {
+  constructor(x: number, y: number, public w: number, public h: number, type:string, maxSpeed:number=3) {
     this.x = x;
     this.y = y;
     this.polygons = this.createPolygon();
+    this.controls = new Controls(type);
+    this.maxSpeed=maxSpeed;
+    if(type!="DUMMY"){
+      this.sensor = new Sensor(this);
+    }else{
+      this.sensor=null
+    }
   }
   public draw(c: CanvasRenderingContext2D) {
-    this.sensor.draw(c);
+    if(this.sensor){
+      this.sensor.draw(c);
+    }
     c.beginPath();
     c.moveTo(this.polygons[0].x, this.polygons[0].y);
     for (let i = 1; i < this.polygons.length; i++) {
@@ -36,10 +46,12 @@ export class Car {
     }
     c.fill();
   }
-  public update = (borders: Line[]) => {
-    this.accessDamage(borders);
+  public update = (borders: Line[], traffic:Car[]) => {
+    this.accessDamage(borders, traffic);
     if(this.damaged) return
-    this.sensor.update(borders);
+    if(this.sensor){
+      this.sensor.update(borders, traffic);
+    }
     this.polygons = this.createPolygon();
     if (this.controls.forward) {
       this.vy += this.ay;
@@ -75,8 +87,11 @@ export class Car {
     this.x -= Math.sin(this.angle) * this.vy;
     this.y -= Math.cos(this.angle) * this.vy;
   };
-  public accessDamage = (borders: Line[]) => {
+  public accessDamage = (borders: Line[],traffic:Car[]) => {
     this.damaged = polyIntersect(this.polygons, borders);
+    for(let i=0;i<traffic.length;i++){
+      this.damaged = polyPolyIntersect(this.polygons, traffic[i].polygons);
+    }
   };
   private createPolygon = () => {
     const points = [];
@@ -111,18 +126,4 @@ export class Car {
   };
 }
 
-function polyIntersect(p1: Vector[], l2: Line[]) {
-  let l1 = [];
-  for (let i = 0; i < p1.length - 1; i++) {
-    l1.push(new Line(p1[i], p1[i + 1]));
-  }
-  for (let i = 0; i < l1.length; i++) {
-    for (let j = 0; j < l2.length; j++) {
-      let touch = l1[i].findIntersect(l2[j]);
-      if (touch) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
+

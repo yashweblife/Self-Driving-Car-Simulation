@@ -3,8 +3,15 @@ export class Controls {
   public left: boolean = false;
   public back: boolean = false;
   public right: boolean = false;
-  constructor() {
-    this.addKeyBindings();
+  constructor(type:string) {
+    switch(type){
+      case "MASTER":
+        this.addKeyBindings();
+        break;
+      case "DUMMY":
+        this.forward=true;    
+        break;
+    }
   }
   private addKeyBindings() {
     document.addEventListener("keydown", (e: KeyboardEvent) => {
