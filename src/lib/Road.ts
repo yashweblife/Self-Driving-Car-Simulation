@@ -18,7 +18,10 @@ export class Road {
       )
     );
     this.borders.push(
-      new Line(new Vector(this.size.y, -100000), new Vector(this.size.y, 100000))
+      new Line(
+        new Vector(this.size.y, 100000),
+        new Vector(this.size.y, -100000)
+      )
     );
   }
   public getLaneCenter = (index: number) => {
