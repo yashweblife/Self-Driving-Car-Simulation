@@ -2,9 +2,9 @@ import { Car } from "./Car";
 import { lerp, Line, Vector } from "./Vector";
 
 export class Sensor {
-  public rayCount: number = 500;
-  public rayLength: number = 500;
-  public raySpread: number = Math.PI / 2;
+  public rayCount: number = 30;
+  public rayLength: number = 300;
+  public raySpread: number = Math.PI /2;
   public rays: Line[] = [];
   public intersections: (Vector | null)[] = [];
   constructor(public car: Car) {
@@ -31,7 +31,7 @@ export class Sensor {
       }
     }
     for(let i=0;i<traffic.length;i++){
-      const poly = traffic[0].polygons;
+      const poly = traffic[i].polygons;
       const lines = []
       for(let j=0;j<poly.length-1;j++){
         lines.push(
@@ -88,7 +88,7 @@ export class Sensor {
         end = this.intersections[i] as Vector;
       }
       c.lineWidth = 2;
-      c.strokeStyle = "rgba(255,255,100,0.1)";
+      c.strokeStyle = "rgba(255,255,100,1)";
       c.beginPath();
       c.moveTo(r.start.x, r.start.y);
       c.lineTo(end.x, end.y);
