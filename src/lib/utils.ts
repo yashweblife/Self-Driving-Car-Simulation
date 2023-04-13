@@ -34,3 +34,7 @@ export function polyPolyIntersect(p1: Vector[], p2: Vector[]) {
   }
   return false;
 }
+
+export function lerp(a:number,b:number,t:number){
+  return(a+(b-a)*t)
+}
